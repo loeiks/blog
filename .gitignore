@@ -25,3 +25,6 @@ pnpm-debug.log*
 
 # vscode files
 .vscode/
+
+# ignore wrangler outputs
+.wrangler/

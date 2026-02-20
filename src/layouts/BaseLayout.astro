@@ -1,0 +1,47 @@
+---
+import Header from "~/components/Header.astro";
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = "I don't know what yo write here actually." } =
+  Astro.props;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Andika:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+      rel="stylesheet"
+    />
+
+    <title>{title}</title>
+  </head>
+
+  <body
+    class="bg-gray-50 text-gray-900 font-sans antialiased selection:bg-blue-200 grid grid-rows-[auto_1fr_auto] min-h-screen"
+  >
+    <Header />
+
+    <div class="w-full flex justify-center">
+      <main class="w-full max-w-[1070px] py-6">
+        <slot />
+      </main>
+    </div>
+
+    <footer class="py-3 text-sm bg-[#e0e0ef] text-center">
+      &copy; {new Date().getFullYear()} Enes. Built with Astro.
+    </footer>
+  </body>
+</html>
