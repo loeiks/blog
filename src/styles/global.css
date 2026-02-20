@@ -1,6 +1,13 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
+/* https://www.color-hex.com/color/6867af */
+
 @theme {
-  --font-sans: "Andika", sans-serif;
+  --font-sans: "Livvic", sans-serif;
+
+  --color-primary: #6867af;
+  --color-primary-30: #53528c;
+  --color-primary-10: #48487a;
+  --color-primary-90: #e0e0ef;
 }

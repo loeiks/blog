@@ -1,43 +1,17 @@
-# Astro Starter Kit: Minimal
+# My Blog
 
-```sh
-bun create astro@latest -- --template minimal
-```
+This is my personal website/blog (mostly blog) where I share some custom mini apps, posts etc. My dream goal for this blog is to build everything that powers it, shortly almost %100 in-house blog from framework used to database technology, I said almost %100 because I won't build a programming language nor hardware xd.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+But I will go there slowly, because one of the other main goals for this blog is to "publish things" actually. This is also a playground and a learning place for me where I can play with things I learned.
 
-## 🚀 Project Structure
+## Tech Stack
 
-Inside of your Astro project, you'll see the following folders and files:
+For the current version you are looking at I used;
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+- Astro
+- MDX (with Astro Content)
+- Tailwind CSS
+- Cloudflare Pages
+- Bun (for package management)
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
-
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command               | Action                                           |
-| :-------------------- | :----------------------------------------------- |
-| `bun install`         | Installs dependencies                            |
-| `bun dev`             | Starts local dev server at `localhost:4321`      |
-| `bun build`           | Build your production site to `./dist/`          |
-| `bun preview`         | Preview your build locally, before deploying     |
-| `bun astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `bun astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+that's it.
