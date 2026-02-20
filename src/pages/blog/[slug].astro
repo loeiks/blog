@@ -1,0 +1,42 @@
+---
+import type { GetStaticPaths } from "astro";
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+export const getStaticPaths = (async () => {
+  const blogEntries = await getCollection("blog");
+
+  return blogEntries.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}) satisfies GetStaticPaths;
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+---
+
+<BaseLayout
+  title={`${entry.data.title} | enesb.im`}
+  description={entry.data.description}
+>
+  <article class="flex flex-col gap-4">
+    <div class="flex flex-col">
+      <time
+        datetime={entry.data.publishDate.toISOString()}
+        class="text-gray-500 mb-1"
+      >
+        {
+          entry.data.publishDate.toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })
+        }
+      </time>
+      <h1 class="text-3xl font-bold">{entry.data.title}</h1>
+    </div>
+
+    <div class="prose prose-neutral max-w-none w-full"><Content /></div>
+  </article>
+</BaseLayout>

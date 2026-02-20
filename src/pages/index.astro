@@ -1,10 +1,58 @@
 ---
+import { getCollection } from "astro:content";
 import BaseLayout from "~/layouts/BaseLayout.astro";
+
+const allPosts = await getCollection("blog");
+const sortedPosts = allPosts.sort(
+  (a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf(),
+);
 ---
 
 <BaseLayout title="enesb.im | Home">
-  <h1 class="text-3xl font-bold mb-4">Welcome to my Blog</h1>
-  <p class="text-gray-600">
-    This is v0.1. Soon, there will be a list of posts here.
-  </p>
+  <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-2 mb-6">
+      <h1 class="text-3xl font-bold">Welcome to my Blog</h1>
+      <p class="text-gray-600">
+        This is my personal blog, where I do create contents about anything I
+        like, but mostly tech. My dream goal for this blog is having everything
+        in-house, for example instead of Astro framework that I built etc.
+      </p>
+    </div>
+
+    <section class="flex flex-col gap-4">
+      <h2 class="text-2xl font-semibold">Latest Posts</h2>
+
+      <div class="h-[1px] w-full bg-gray-300"></div>
+
+      <ul class="flex flex-col gap-6">
+        {
+          sortedPosts.map((post) => (
+            <li class="h-auto">
+              <a href={`/blog/${post.slug}`}>
+                <div class="flex flex-col hover:text-[#53528c]">
+                  <time
+                    datetime={post.data.publishDate.toISOString()}
+                    class="text-sm text-gray-500 mb-1"
+                  >
+                    {post.data.publishDate.toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </time>
+
+                  <h3 class="text-xl font-medium  transition-colors">
+                    {post.data.title}
+                  </h3>
+                  {post.data.description && (
+                    <p class="text-sm">{post.data.description}</p>
+                  )}
+                </div>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </div>
 </BaseLayout>
