@@ -1,0 +1,11 @@
+---
+const { link } = Astro.props;
+---
+
+<div class="bg-primary-90 px-2 rounded-[6px]">
+  <p>
+    This post was originally posted here: <a href={link} target="_blank"
+      >{link}</a
+    >
+  </p>
+</div>

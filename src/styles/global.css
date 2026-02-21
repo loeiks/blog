@@ -11,3 +11,33 @@
   --color-primary-10: #48487a;
   --color-primary-90: #e0e0ef;
 }
+
+.prose
+  :where(blockquote p:first-of-type):not(
+    :where([class~="not-prose"], [class~="not-prose"] *)
+  )::before {
+  content: none;
+}
+
+.prose
+  :where(blockquote):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+  background-color: #efefef;
+  border-inline-start-color: #cccccc;
+  font-style: normal;
+  border-radius: 6px;
+  corner-shape: squircle;
+}
+
+.prose
+  :where(code):not(
+    :where([class~="not-prose"], [class~="not-prose"] *)
+  )::before {
+  content: none;
+}
+
+.prose
+  :where(code):not(
+    :where([class~="not-prose"], [class~="not-prose"] *)
+  )::after {
+  content: none;
+}

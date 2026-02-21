@@ -1,0 +1,285 @@
+---
+title: "Automate Your Deployment with Wix CLI and GitHub Actions"
+description: "Automating deployment for Wix built websites is not that straight forward, but there is a way to add a CD step!"
+publishDate: "09-12-2025"
+---
+
+import PostOrigin from "~/components/PostOrigin.astro"
+
+There are tons of sites using custom code in Wix, some of them uses Git integration and some not. In this article I will try to explain how you can build an automated deployment for your Wix site with Git integration via GitHub.
+
+Before I start you should have a Wix site that is connected to GitHub and cloned to your local machine. And general understanding of how Git and GitHub works.
+
+## What is GitHub Actions
+
+A GitHub action is actually something like a script that works in a remote machine/server which executes your `workflows` that you define inside `.github/workflows` directory in your project.
+
+In this article we will tell GitHub to publish our Wix website with `wix publish` command from Wix CLI, but to do that we need to configure few things:
+
+1. Get API key from Wix to run commands as an authenticated user on remote terminal.
+2. Setup `.github/workflows/publish.yml` workflow to create the action.
+
+> You can create a new free Wix site to just test this first and then apply to one of your site/app in Wix.
+
+## Wix CLI API Key
+
+Go to your account API keys in [Wix](https://manage.wix.com/account/api-keys) API keys here are created for all sites you have in your account.
+
+Create a new API key and find the **“Wix CLI - Git Integration”** permission and only select that permission from the list.
+
+> When API key is generated copy it and save it somewhere for now, you won’t be able to see it again. Once you lost it you need to rotate it, or in other words re-create it which will invalidate old API key.
+
+After you created API key you should see it like this;
+
+<img src="/images/wix-api-permissions.png"/>
+
+## Let’s Build publish.yml
+
+Now open up your project on your IDE (I use VSCode) and create a new folder called `.github` then another folder inside of it called `workflows` and then create a file inside there called `publish.yml`.
+
+> You can call it however you want I used publish.yml.
+
+So in the end, file directory is like this: `.github/workflows/publish.yml`. Now let’s understand how actions are built and works.
+
+### About Workflows
+
+Every workflow is created from some set of jobs and step, every job includes some steps and every step includes some actions. A quick example;
+
+```yml
+steps:
+    - name: Checkout Repo
+      uses: actions/checkout@v4
+```
+
+This is a step inside of a job, which checkouts your repository (kinda like downloads your code from GitHub) which is needed in many cases, in many actions.
+
+Another example with run;
+
+```yml
+steps:
+      - name: Publish to NPM
+        id: publish
+        run: npm publish --access public
+        env:
+            NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+```
+
+This one might seem a bit more complex because there is a `env` variable involved in the step. Let’s explain it:
+
+1. run part is running `npm publish --access public` command in remote terminal.
+2. env: part is basically setting up a env variable from the repo settings in GitHub.
+
+Our publish command for Wix will be very similar to this one.
+
+I want to explain where these commands work once again; all of these commands runs inside of a virtual machine, in a server which is actually a real computer in the end just like yours. (shortly in server)
+
+When a GitHub action runs, GitHub creates a special environment for your action based on the rules that you define in your workflow file, and then start executing jobs, steps and finally commands we told it to run inside that virtual machine just like how code is executed.
+
+### Creating the GitHub Deployment Action
+
+Go to `publish.yml` that you have created few seconds ago, let’s start from top to bottom one by one.
+
+```yml
+name: "🚀 Deploying to Wix"
+```
+
+This is the very first line of our workflow, it’s just the name of it. You can write anything you want, this is what you will see in GitHub Actions tab.
+
+```yml
+on:
+  push:
+    branches:
+      - main
+```
+
+I won’t get into a lot of details about this part but of course I will explain it, this is the trigger rule basically. This part says that **whenever `main` branch gets a new push into it, run this action.**
+
+> Your default branch name might be different than `main` double check that, otherwise you won’t see any errors but your action won’t run. Mine is `main` but for new accounts it might be `Master/Branch`.
+
+This part can contain multiple rules and different types of triggers not just pushes, for example releases etc.
+
+Let’s move on.
+
+```yml
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+```
+
+Ok, this is important for someone very new to actions (and DevOps) this is basically the type of OS we will use when we are executing the action (all the jobs, steps, commands). This part tells GitHub to setup a Linux environment with Ubuntu’s latest version.
+
+> Linux is the OS, Ubuntu is a distro of Linux. Think like Windows and it’s versions such as 10, 11. Ubuntu isn’t the version but more of a different variant of Linux.
+
+`deploy`: is a custom keyword we could also say publish: or something else. It’s name of the job we define.
+
+```yml
+permissions:
+    contents: read
+```
+
+This is the permissions part where we tell GitHub to grant some permissions to this action, so it can access to things it needs, **and it should only access to things that it needs.**
+
+`contents: read` tells GitHub to grant `read` permission to this action so it can read repository content (able to read the data inside GitHub repo, such as code).
+
+Let’s move into actually running part, everything we defined until that part was config details for action and it’s environment.
+
+```yml
+steps:
+    - name: "Checkout Repository"
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+
+    - name: "Install Wix CLI"
+      run: npm install -g @wix/cli@latest
+
+    - name: "Login to Wix"
+      run: wix login --api-key $WIX_CLI
+      env:
+        WIX_CLI: ${{ secrets.WIX_CLI }}
+
+    - name: "Deploy to Wix"
+      run: npm run publish
+```
+
+Now this is the last block, I want to explain all at once instead of going one by one. I already explained a bit how steps works. Now let’s get into details for this action;
+
+1. First we use `actions/checkout@v4` to get the contents of repo (`contents: read` in permissions is important for this part). Because we need the files inside repo.
+2. Then we download and setup Node.js to run commands. Just like downloading Node.js into your machine. And also we define to install Node version 20.
+
+Until this part we have used predefined packages for actions these packages contains multiple commands and handles complex or even if not complex handles multiple things for us to make things easy and more readable without making workflow file too large.
+
+3. It’s time to install Wix CLI tool so we can run commands with `wix` alias. Just like in our development environment, we use `npm install -g @wix/cli@latest` so it installs the latest Wix CLI from NPM registry.
+
+Next we need to authenticate *(login)* but unlike how we do it in our local development environment. We can’t use `wix login` just as is, because we can’t actually use a browser to login into wix.com and grant permissions etc. So instead we will use an API key that has access to relevant permissions.
+
+4. We run `wix login --api-key $WIX_CLI` but when we are doing this we are setting up an env variable, we will come to that part later on for now just set it up.
+
+Last part is a bit tricky because how Wix CLI works. When you run `wix publish` it asks you to pick either remote repo or local code. Currently it’s not possible to run something like;
+
+`wix publish --local` or `wix publish --remote` to easily tell Wix to which one to pick when publishing instead we select it interactively in terminal. (bad developer experience here ⚠️⚠️).
+
+Instead we will build a very basic script to automate key presses and publish to remote. Go and create a new folder in the project root called `scripts` and create a file called `publish.js` inside of that folder and paste the following code;
+
+scripts/publish.js:
+
+```js
+const { spawn } = require('child_process');
+console.log('Starting Wix publish process...');
+
+const child = spawn('wix', ['publish', '-y'], {
+    stdio: ['pipe', 'inherit', 'inherit'],
+    shell: true,
+});
+
+child.stdin.write('\n');
+child.stdin.end();
+child.on('close', (code) => {
+    console.log(`Wix publish process exited with code ${code}`);
+    process.exit(code);
+});
+```
+
+I won’t explain this code, but shortly it runs `wix publish -y` and then presses `Enter` to publish the remote version of repo which is what we want.
+
+Next we need to add this to `package.json` file. Find and open the `package.json` and add this line to scripts part:
+
+```json
+"scripts": {
+    "postinstall": "wix sync-types",
+    "dev": "wix dev",
+    "lint": "eslint .",
+    "publish": "node ./scripts/publish.js" // new line
+}
+```
+
+Now we are ready for last step.
+
+5. In the last step we run `npm run publish` which actually runs our JS file with Node.js, so it runs `wix publish -y` command and then presses `Enter` which publishes our site using remote repo’s default branch HEAD.
+
+> HEAD is the state of Git. remote repo’s default branch HEAD means; latest state of default branch in GitHub.
+
+Now open up GitHub and the repository of your project then go to settings tab;
+
+<img src="/images/github-settings-secrets.png"/>
+
+1. In settings find **Secrets and Variables** click it.
+2. In the **Actions** tab create a new repository secret.
+3. Paste the Wix API Key and name it as **WIX_CLI**.
+
+Now you are ready to push your changes to GitHub. In the end files should look like this:
+
+.github/workflows/publish.yml >
+
+```yml
+name: "🏗️🚀 Building and Deploying to Wix"
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: "Checkout Repository"
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: "Install Wix CLI"
+        run: npm install -g @wix/cli@latest
+
+      - name: "Login to Wix"
+        run: wix login --api-key $WIX_CLI
+        env:
+          WIX_CLI: ${{ secrets.WIX_CLI }}\
+
+      - name: "Deploy to Wix"
+        run: npm run publish
+```
+
+scripts/publish.js >
+
+```js
+const { spawn } = require('child_process');
+console.log('Starting Wix publish process...');
+
+const child = spawn('wix', ['publish', '-y'], {
+    stdio: ['pipe', 'inherit', 'inherit'],
+    shell: true,
+});
+
+child.stdin.write('\n');
+child.stdin.end();
+child.on('close', (code) => {
+    console.log(`Wix publish process exited with code ${code}`);
+    process.exit(code);
+});
+```
+
+package.json >
+
+```json
+"scripts": {
+    "postinstall": "wix sync-types",
+    "dev": "wix dev",
+    "lint": "eslint .",
+    "publish": "node ./scripts/publish.js"
+}
+```
+
+When you push your changes, GitHub will run the action and publish your site/app. Your automated deployment workflow should be working fine.
+
+<PostOrigin link="https://forum.wixstudio.com/t/automate-your-deployment-with-wix-cli-and-github-actions-ci-cd-tutorial/73523" />

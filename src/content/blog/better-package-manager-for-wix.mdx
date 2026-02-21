@@ -1,0 +1,71 @@
+---
+title: "Better Package Manager for Wix CLI Sites"
+description: "Running wix install for every single package is a hell, try this instead!"
+publishDate: "09-06-2025"
+---
+
+import PostOrigin from "~/components/PostOrigin.astro"
+
+If you ever used, or actively using Wix CLI for your Wix websites (not headless) you know there is a CLI command `wix install` and `wix uninstall` to install and remove `npm` packages.
+
+The worst part of this command is that it’s not possible to install or uninstall multiple packages at once. Which is actually supported by `npm`. For example;
+
+❌ This one doesn’t work;
+
+```bash
+wix install axios lodash @wix/stores
+```
+
+✅ Instead we have to do this way;
+
+```bash
+wix install axios
+wix install lodash
+wix install @wix/stores
+```
+
+And for some reason installs takes longer than classic `npm install` commands probably due to something extra changes in Wix based config files, or maybe something else I don’t know. 🤷‍♂️
+
+> There is no way to fix this speed since `wix install` is required to apply changes to live site.
+
+## Say hi to wixn
+
+I built an npm package to fix this and make things a bit easier for devs.
+
+https://www.npmjs.com/package/wixn
+
+`wixn` allows you to install and uninstall packages with alias as well as install/uninstall multiple packages with single command.
+
+✅ Example for install;
+
+```bash
+npx wixn i axios lodash @wix/stores
+```
+
+You can use **i, install or add** aliases for installing packages followed by the packages names.
+
+✅ Example for uninstall;
+
+```bash
+npx wixn rm axios lodash
+```
+
+You can use **rm, remove, uninstall** aliases for uninstalling packages followed by the packages names.
+
+✅ Example with --nx flag;
+
+```bash
+npx wixn i axios lodash @wix/stores --nx
+```
+
+This will skip the `wix install` part, to make packages available in the editor quickly.
+
+## How it works?
+
+`wixn` runs install or uninstall commands in parallel and while doing the job it shows you which packages are installed or uninstalled.
+
+To make it faster you can use the `--nx` flag this will skip `wix install` part at the end which is enabled by default to apply changes to Wix after installing packages.
+
+When you want to preview things or deploy changes run classic `wix install` to install all packages in `package.json` file this will handle everything needed on Wix side, otherwise running `npm install` only won’t install packages into site.
+
+<PostOrigin link="https://forum.wixstudio.com/t/better-package-manager-for-wix-cli-sites/73378" />
