@@ -20,7 +20,7 @@ const sortedPosts = allPosts
         {
           sortedPosts.map((post) => (
             <li class="h-auto">
-              <a href={`/blog/${post.slug}`}>
+              <a href={`/blog/${post.data.customSlug}`}>
                 <div class="flex flex-col hover:text-primary-10">
                   <time
                     datetime={post.data.publishDate.toISOString()}
