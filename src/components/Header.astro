@@ -1,6 +1,6 @@
 ---
 import { Github, Instagram, Twitter, Volume2, VolumeOff } from "@lucide/astro";
-import Link from "./html/Link.astro";
+import Link from "~/components/html/Link.astro";
 ---
 
 <header
@@ -32,6 +32,7 @@ import Link from "./html/Link.astro";
       type="button"
       aria-label="Toggle sound effects"
       style="visibility: hidden;"
+      class="cursor-pointer"
     >
       <Volume2 id="icon-on" class="hidden" />
       <VolumeOff id="icon-off" />
