@@ -14,17 +14,24 @@ const { title, description = "I don't know what yo write here actually." } =
 
 <html lang="en">
   <head>
+    <!-- standard shits -->
     <meta charset="utf-8" />
-    <link
-      rel="icon"
-      type="image/png"
-      href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAD0lEQVR4AQEEAPv/AGhnrwK5AX/zvz71AAAAAElFTkSuQmCC"
-    />
     <meta name="viewport" content="width=device-width" />
 
+    <!-- icon things -->
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/favicon.png" />
+
+    <!-- seo things -->
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
 
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <!-- This uses your same favicon as the fallback preview image -->
+    <meta property="og:image" content="https://enesb.im/favicon.png" />
+
+    <!-- font things -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
