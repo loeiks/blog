@@ -1,5 +1,6 @@
 ---
 import Header from "~/components/Header.astro";
+import Sounds from "~/components/Sounds.astro";
 import "../styles/global.css";
 
 interface Props {
@@ -48,5 +49,7 @@ const { title, description = "I don't know what yo write here actually." } =
     <footer class="py-2 text-sm bg-primary-90 text-center">
       everything has an ending just like this page.
     </footer>
+
+    <Sounds />
   </body>
 </html>

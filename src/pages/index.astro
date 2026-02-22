@@ -1,5 +1,6 @@
 ---
 import { getCollection } from "astro:content";
+import Link from "~/components/html/Link.astro";
 import BaseLayout from "~/layouts/BaseLayout.astro";
 
 // get latest 10 posts sorted by most recent
@@ -20,25 +21,28 @@ const sortedPosts = allPosts
         {
           sortedPosts.map((post) => (
             <li class="h-auto">
-              <a href={`/blog/${post.data.customSlug}`}>
-                <div class="flex flex-col hover:text-primary-10">
-                  <time
-                    datetime={post.data.publishDate.toISOString()}
-                    class="text-sm text-gray-500 mb-1"
-                  >
-                    {post.data.publishDate.toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
-                  </time>
+              <div class="flex flex-col">
+                <time
+                  datetime={post.data.publishDate.toISOString()}
+                  class="text-sm text-gray-500 mb-1"
+                >
+                  {post.data.publishDate.toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </time>
 
+                <Link
+                  href={`/blog/${post.data.customSlug}`}
+                  class="max-w-max hover:text-primary-10"
+                >
                   <h3 class="text-2xl font-medium">{post.data.title}</h3>
-                  {post.data.description && (
-                    <p class="text-gray-600">{post.data.description}</p>
-                  )}
-                </div>
-              </a>
+                </Link>
+                {post.data.description && (
+                  <p class="text-gray-600">{post.data.description}</p>
+                )}
+              </div>
             </li>
           ))
         }

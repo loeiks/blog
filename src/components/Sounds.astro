@@ -1,0 +1,70 @@
+<script>
+  type SoundMode = "internal" | "external" | "stateUpdate";
+
+  const STORAGE_KEY = "sound-enabled";
+
+  const sounds: Record<SoundMode, HTMLAudioElement> = {
+    internal: new Audio("/sounds/hover.mp3"),
+    external: new Audio("/sounds/hover.mp3"),
+    stateUpdate: new Audio("/sounds/sounds-enabled.mp3"),
+  };
+
+  const soundsEnabledAudio = new Audio("/sounds/sounds-enabled.mp3");
+  soundsEnabledAudio.preload = "auto";
+
+  Object.values(sounds).forEach((audio) => {
+    audio.preload = "auto";
+  });
+
+  let soundEnabled = localStorage.getItem(STORAGE_KEY) === "true";
+
+  const playSound = (mode: SoundMode) => {
+    if (!soundEnabled) return;
+
+    const audio = sounds[mode];
+    if (!audio) return;
+
+    audio.currentTime = 0;
+    audio.play().catch(() => {});
+  };
+
+  const handleMouseEnter = (event: Event) => {
+    const target = event.target as HTMLElement;
+    const mode = target?.dataset.soundMode as SoundMode | undefined;
+
+    if (mode && mode in sounds) {
+      playSound(mode);
+    }
+  };
+
+  let isInitialized = false;
+
+  const init = () => {
+    if (isInitialized) return;
+    isInitialized = true;
+
+    soundEnabled = localStorage.getItem(STORAGE_KEY) === "true";
+
+    document.addEventListener("mouseenter", handleMouseEnter, true);
+
+    window.addEventListener("sound-toggle", ((e: CustomEvent) => {
+      soundEnabled = e.detail.enabled;
+      if (soundEnabled) {
+        const audio = sounds["stateUpdate"];
+        audio.currentTime = 0;
+        audio.play().catch(() => {});
+      }
+    }) as EventListener);
+  };
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+
+  document.addEventListener("astro:after-swap", () => {
+    isInitialized = false;
+    init();
+  });
+</script>

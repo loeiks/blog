@@ -2,7 +2,7 @@
 import type { GetStaticPaths } from "astro";
 import { getCollection } from "astro:content";
 import BaseLayout from "~/layouts/BaseLayout.astro";
-import MDXLink from "~/components/MDXLink.astro";
+import Link from "~/components/html/Link.astro";
 
 export const getStaticPaths = (async () => {
   const blogEntries = await getCollection("blog");
@@ -41,7 +41,7 @@ const { Content } = await entry.render();
     <div
       class="prose prose-slate max-w-none w-full prose-p:text-[#282828] prose-ol:text-[#282828] prose-ul:text-[#282828] prose-li:text-[#282828] marker:text-[#282828] prose-h2:mt-6 prose-h2:mb-4"
     >
-      <Content components={{ a: MDXLink }} />
+      <Content components={{ a: Link }} />
     </div>
   </article>
 </BaseLayout>

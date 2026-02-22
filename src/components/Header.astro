@@ -1,27 +1,76 @@
 ---
-import { Github, Instagram, Twitter } from "@lucide/astro";
+import { Github, Instagram, Twitter, Volume2, VolumeOff } from "@lucide/astro";
+import Link from "./html/Link.astro";
 ---
 
 <header
   class="py-4 px-6 bg-primary w-full flex items-center justify-center sticky top-0"
 >
   <div
-    class="max-w-[1070px] w-full flex flex-row items-center content-center text-white hover:underline"
+    class="max-w-[1070px] w-full flex flex-row items-center content-center text-white"
   >
-    <a href="/">Hello! I'm Enes aka @loeiks</a>
+    <Link href="/" class="hover:underline">Hello! I'm Enes aka @loeiks</Link>
 
     <div class="ml-auto"></div>
 
     <div id="social-icons" class="flex items-center gap-2 flex-row text-white">
-      <a href="https://twitter.com/loeiks_" target="_blank">
+      <Link href="https://twitter.com/loeiks_">
         <Twitter />
-      </a>
-      <a href="https://instagram.com/loeiks" target="_blank">
+      </Link>
+      <Link href="https://instagram.com/loeiks">
         <Instagram />
-      </a>
-      <a href="https://github.com/loeiks" target="_blank">
+      </Link>
+      <Link href="https://github.com/loeiks">
         <Github />
-      </a>
+      </Link>
     </div>
+
+    <div class="w-[1px] h-[20px] bg-primary-90 mx-4"></div>
+
+    <button
+      id="sound-toggle"
+      type="button"
+      aria-label="Toggle sound effects"
+      style="visibility: hidden;"
+    >
+      <Volume2 id="icon-on" class="hidden" />
+      <VolumeOff id="icon-off" />
+    </button>
   </div>
 </header>
+
+<script>
+  const STORAGE_KEY = "sound-enabled";
+
+  const initSoundToggle = () => {
+    const button = document.getElementById("sound-toggle");
+    const iconOn = document.getElementById("icon-on");
+    const iconOff = document.getElementById("icon-off");
+
+    if (!button || !iconOn || !iconOff) return;
+
+    const updateIcons = (enabled: boolean) => {
+      iconOn.classList.toggle("hidden", !enabled);
+      iconOff.classList.toggle("hidden", enabled);
+      button.style.visibility = "visible";
+    };
+
+    const isEnabled = localStorage.getItem(STORAGE_KEY) === "true";
+    updateIcons(isEnabled);
+
+    button.addEventListener("click", () => {
+      const currentState = localStorage.getItem(STORAGE_KEY) === "true";
+      const newState = !currentState;
+
+      localStorage.setItem(STORAGE_KEY, String(newState));
+      updateIcons(newState);
+
+      window.dispatchEvent(
+        new CustomEvent("sound-toggle", { detail: { enabled: newState } }),
+      );
+    });
+  };
+
+  initSoundToggle();
+  document.addEventListener("astro:after-swap", initSoundToggle);
+</script>

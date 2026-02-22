@@ -1,4 +1,5 @@
 ---
+// This component replaces <a> element.
 const { href, ...props } = Astro.props;
 const isExternal = href.startsWith("http");
 ---
@@ -7,6 +8,7 @@ const isExternal = href.startsWith("http");
   href={href}
   target={isExternal ? "_blank" : "_self"}
   rel={isExternal ? "noopener noreferrer" : ""}
+  data-sound-mode={isExternal ? "external" : "internal"}
   {...props}
 >
   <slot />
