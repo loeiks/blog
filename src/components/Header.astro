@@ -4,12 +4,15 @@ import Link from "~/components/html/Link.astro";
 ---
 
 <header
-  class="py-4 px-6 bg-primary w-full flex items-center justify-center sticky top-0"
+  class="p-4 bg-primary w-full flex items-center justify-center sticky top-0"
 >
   <div
     class="max-w-[1070px] w-full flex flex-row items-center content-center text-white"
   >
-    <Link href="/" class="hover:underline">Hello! I'm Enes aka @loeiks</Link>
+    <Link href="/" class="hover:underline">
+      <span class="block md:hidden">Enes aka @loeiks</span>
+      <span class="hidden md:block">Hello! I'm Enes aka @loeiks</span>
+    </Link>
 
     <div class="ml-auto"></div>
 
