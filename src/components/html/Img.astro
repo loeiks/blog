@@ -1,0 +1,77 @@
+---
+const { src, alt, class: className, ...props } = Astro.props;
+const classes = className
+  ? `${className} cursor-pointer transition-all hover:brightness-75`
+  : "cursor-pointer transition-all hover:brightness-75";
+---
+
+<img src={src} alt={alt} class={classes} data-lightbox-img {...props} />
+
+<script>
+  function initLightbox() {
+    let lightbox = document.getElementById("image-lightbox");
+    if (!lightbox) {
+      lightbox = document.createElement("div");
+      lightbox.id = "image-lightbox";
+      lightbox.className =
+        "fixed inset-0 bg-black/90 z-50 hidden items-center justify-center p-4 cursor-zoom-out";
+
+      const lightboxImg = document.createElement("img");
+      lightboxImg.id = "lightbox-image";
+      lightboxImg.className = "max-w-full max-h-full object-contain";
+      lightboxImg.src = "";
+      lightboxImg.alt = "";
+
+      const closeButton = document.createElement("button");
+      closeButton.className =
+        "absolute top-4 right-4 text-white text-2xl font-light hover:opacity-70 transition-opacity cursor-pointer";
+      closeButton.setAttribute("aria-label", "Close lightbox");
+      closeButton.textContent = "×";
+
+      lightbox.appendChild(lightboxImg);
+      lightbox.appendChild(closeButton);
+      document.body.appendChild(lightbox);
+
+      lightbox.addEventListener("click", function () {
+        const lb = document.getElementById("image-lightbox");
+        if (lb) {
+          lb.classList.add("hidden");
+          lb.classList.remove("flex");
+        }
+      });
+    }
+
+    const images = document.querySelectorAll("[data-lightbox-img]");
+    images.forEach(function (element) {
+      const img = element as HTMLImageElement;
+      if (img.dataset.lightboxInitialized === "true") return;
+
+      img.dataset.lightboxInitialized = "true";
+
+      img.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const lightboxImg = document.getElementById(
+          "lightbox-image",
+        ) as HTMLImageElement;
+        const lb = document.getElementById("image-lightbox");
+
+        if (lightboxImg && lb) {
+          lightboxImg.src = img.src;
+          lightboxImg.alt = img.alt || "";
+          lb.classList.remove("hidden");
+          lb.classList.add("flex");
+        }
+      });
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initLightbox);
+  } else {
+    initLightbox();
+  }
+
+  document.addEventListener("astro:after-swap", initLightbox);
+</script>

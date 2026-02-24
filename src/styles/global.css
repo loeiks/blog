@@ -42,3 +42,8 @@
   )::after {
   content: none;
 }
+
+.prose img {
+  border-radius: 6px;
+  corner-shape: squircle;
+}

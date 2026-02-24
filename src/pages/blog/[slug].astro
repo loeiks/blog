@@ -3,6 +3,7 @@ import type { GetStaticPaths } from "astro";
 import { getCollection } from "astro:content";
 import BaseLayout from "~/layouts/BaseLayout.astro";
 import Link from "~/components/html/Link.astro";
+import Img from "~/components/html/Img.astro";
 
 export const getStaticPaths = (async () => {
   const blogEntries = await getCollection("blog");
@@ -41,7 +42,7 @@ const { Content } = await entry.render();
     <div
       class="prose w-[calc(100vw-var(--spacing)*8)] prose-p:text-[#282828] prose-ol:text-[#282828] prose-ul:text-[#282828] prose-li:text-[#282828] marker:text-[#282828] prose-h2:mt-6 prose-h2:mb-4 prose-hr:my-6 max-w-maxw"
     >
-      <Content components={{ a: Link }} />
+      <Content components={{ a: Link, img: Img }} />
     </div>
   </article>
 </BaseLayout>

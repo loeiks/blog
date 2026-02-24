@@ -6,6 +6,7 @@ customSlug: "connect-gcp-firestore-to-wix-with-external-db-adapter"
 ---
 
 import PostOrigin from "~/components/PostOrigin.astro"
+import Img from "~/components/html/Img.astro"
 
 Hello! I wanted to create a long and easy to follow tutorial about how to connect Google Firestore to your Wix websites/web apps. You can follow this tutorial with any editor you use. (Wix Editor, Editor X, Wix Studio or Wix Blocks)
 
@@ -69,11 +70,11 @@ This is what happens between Wix and Firestore. Or when you connect any other ex
 
 I assume that you have a Google Cloud account with a billing enabled project. Go to your project and search Firestore in the search bar and select Firestore:
 
-<img alt="Firestore searched in Google Cloud" src="/images/gcp-firestore-selection-search.jpeg" />
+<Img alt="Firestore searched in Google Cloud" src="/images/gcp-firestore-selection-search.jpeg" />
 
 You will see a page that shows you two option "Native Mode" or "Datastore Mode", select **Native Mode** (this will be permanent for project-level).
 
-<img alt="Firestore type selection as Native Mode" src="/images/firestore-native-mode-selection.jpeg" />
+<Img alt="Firestore type selection as Native Mode" src="/images/firestore-native-mode-selection.jpeg" />
 
 After you select Native Mode Google Cloud will ask you for Firestore location. As we are in a Cloud provider there are tons of servers we can use. You will have two options:
 
@@ -86,7 +87,7 @@ I will select Multi Region in Europe (EU) since my users will be coming from Eur
 
 And then click **"Create Database".** (It may take up to few minutes to create your Firestore Database in selected Region)
 
-<img alt="Location options for Firestore server" src="/images/firestore-region-selection.jpeg" />
+<Img alt="Location options for Firestore server" src="/images/firestore-region-selection.jpeg" />
 
 ### **Step 2 - Setup Firestore Database and Collections**
 
@@ -94,7 +95,7 @@ If you never used Firestore or Cloud services before UI might be not understanda
 
 Now you should see a page similar to this one:
 
-<img alt="Google Cloud Firestore home UI" src="/images/gcp-firestore-home-ui.jpeg" />
+<Img alt="Google Cloud Firestore home UI" src="/images/gcp-firestore-home-ui.jpeg" />
 
 Let me explain what we will do before we do. Since Firestore is document based database like Wix (Wix is using MongoDB which is document based database) we will create collections and we will create documents. I think you already know what is collections. And the documents inside our collections are the data we store in our collections.
 
@@ -125,7 +126,7 @@ Now let's start building "_descriptor" collection for our custom made collection
 **Set Document ID as "Members"** and **add a field name as "id"** select **field type as string and write Collection ID to the value field which is Members in our case** And we are good to go.
 
 Check your setup and mine:
-<img alt="Creating _descriptor collection in Firestore to Store collection field/type data" src="/images/_descriptor-collection-firestore.jpeg" />
+<Img alt="Creating _descriptor collection in Firestore to Store collection field/type data" src="/images/_descriptor-collection-firestore.jpeg" />
 
 > You must do this when you create another collection in Firestore. If you don't adapter will not be able to fetch that collection and add it inside Wix.
 
@@ -151,11 +152,11 @@ This is what it looks like:
 ]
 ```
 
-<img alt="Creating a filed in document for collection id" src="/images/adding-collection-fields-in-descriptor.jpeg" />
+<Img alt="Creating a filed in document for collection id" src="/images/adding-collection-fields-in-descriptor.jpeg" />
 
 Create other fields of Members collection and then your page should look like this:
 
-<img alt="Ready to use _descriptor collection in Firestore for Wix ecternal collection adapter" src="/images/ready-to-use-descriptor-collection-with-fields.jpeg" />
+<Img alt="Ready to use _descriptor collection in Firestore for Wix ecternal collection adapter" src="/images/ready-to-use-descriptor-collection-with-fields.jpeg" />
 
 **Now we are done with _descriptor.**
 
@@ -163,7 +164,7 @@ Create other fields of Members collection and then your page should look like th
 
 Let's create Members collection. Just create a new collection name it as Members and add values for the fields we set before. And click save.
 
-<img alt="Members collection with dumy data in it" src="/images/member-collection-dummy-data.jpeg" />
+<Img alt="Members collection with dumy data in it" src="/images/member-collection-dummy-data.jpeg" />
 
 For now we are ready to for the Cloud Run part. But of course we can come back and add new collections or fields in our collections.
 
@@ -176,7 +177,7 @@ Click **"Create Secret"** name it as **"SECRET_KEY"** and add your connection pa
 
 And click Create Secret.
 
-<img alt="Creating a secret for adapter and Wix connection" src="/images/creating-secret-for-wix-db-adapter.jpeg" />
+<Img alt="Creating a secret for adapter and Wix connection" src="/images/creating-secret-for-wix-db-adapter.jpeg" />
 
 And we are ready to go Cloud Run. Search for "run" in Cloud Console and open Cloud Run.
 
@@ -184,7 +185,7 @@ And we are ready to go Cloud Run. Search for "run" in Cloud Console and open Clo
 
 In Cloud Run click **Create Service** to create our server between Firestore and Wix.
 
-<img alt="Cloud Run homepage without any service" src="/images/cloud-run-homepage-empty.jpeg" />
+<Img alt="Cloud Run homepage without any service" src="/images/cloud-run-homepage-empty.jpeg" />
 
 Paste that Container image URL: "**[gcr.io/wix-velo-api/velo-external-db](https://gcr.io/wix-velo-api/velo-external-db)**" This will automatically set the name to velo-external-db.
 
@@ -198,7 +199,7 @@ Settings in CPU allocation and pricing are important for cost and performance. I
 **Select CPU is only allocated during request processing.
 Set min number of instances to 0 and max to 100.**
 
-<img alt="Cloud Run service settings" src="/images/cloud-run-new-service-settings-with-wix-container-image.jpeg" />
+<Img alt="Cloud Run service settings" src="/images/cloud-run-new-service-settings-with-wix-container-image.jpeg" />
 
 Scroll down.
 
@@ -206,13 +207,13 @@ Select **"Allow unauthenticated invocations"** in Authentication settings. This 
 
 And click Create. Process may take up to 1-2min to create the service and deploy it to servers.
 
-<img alt="Cloud Run service settings" src="/images/cloud-run-service-settings-page-2.jpeg" />
+<Img alt="Cloud Run service settings" src="/images/cloud-run-service-settings-page-2.jpeg" />
 
 After you created service click **Edit & Deploy New Revision**. (Top menu next to Service Details) And select **Security** tab.
 
 Here we need to create a Service Account for that service with specific permissions to keep it secure and give access to Firestore. **Click Service account and create new Service Account.**
 
-<img alt="Service account selection" src="/images/service-account-selection-for-cloud-run-service.jpeg" />
+<Img alt="Service account selection" src="/images/service-account-selection-for-cloud-run-service.jpeg" />
 
 After you create new Service Account you need to add following roles/permissions to that service account:
 
@@ -222,7 +223,7 @@ After you create new Service Account you need to add following roles/permissions
 
 And click Done.
 
-<img alt="New service account in Cloud Run with required permissions and roles" src="/images/new-service-account-in-cloud-run-with-permissions.jpeg" />
+<Img alt="New service account in Cloud Run with required permissions and roles" src="/images/new-service-account-in-cloud-run-with-permissions.jpeg" />
 
 
 After that go back to Container tab and scroll down until you see **"Environment variables"**. In here you will need to enter three env variable.
@@ -233,14 +234,14 @@ After that go back to Container tab and scroll down until you see **"Environment
 
 Project ID is your Google Cloud Project ID. If you don't know your project id you can find it by clicking project name (next to Google Cloud logo).
 
-<img alt="Google Cloud Projects popup" src="/images/gcp-projects-popup.jpeg" />
+<Img alt="Google Cloud Projects popup" src="/images/gcp-projects-popup.jpeg" />
 
 **For type we will use: "firestore"
 For vendor we will use: "gcp"**
 
 It should look like this:
 
-<img alt="Cloud Run service env variables for Firestore Wix adapter connection" src="/images/cloud-run-wix-external-db-service-env-variables.jpeg" />
+<Img alt="Cloud Run service env variables for Firestore Wix adapter connection" src="/images/cloud-run-wix-external-db-service-env-variables.jpeg" />
 
 Next we will add our secret key to the service. To do that you will see **"Secrets"** just under env variables. Click **"Add a Secret Reference"**.
 
@@ -250,11 +251,11 @@ Next we will add our secret key to the service. To do that you will see **"Secre
 4. Select "latest" version.
 5. Click Done.**
 
-<img alt="Secret key settings in Cloud Run service" src="/images/secret-key-for-wix-external-db.jpeg" />
+<Img alt="Secret key settings in Cloud Run service" src="/images/secret-key-for-wix-external-db.jpeg" />
 
 When you ready scroll down more and click **Deploy.**
 
-<img alt="Deployed service with valid URL to use in Wix" src="/images/service-url-in-gcp-run.jpeg" />
+<Img alt="Deployed service with valid URL to use in Wix" src="/images/service-url-in-gcp-run.jpeg" />
 
 After your service deployed successfully copy your service URL and save it somewhere because we will need it when we connect it to Wix. And we will also need the password we set earlier.
 
@@ -262,7 +263,7 @@ After your service deployed successfully copy your service URL and save it somew
 
 Now we can go to our Wix Editor to connect our external DB to our Wix website/web app. Open your Editor and enable developer tools if you haven't yet. And open collections tab then click **"+ Connect an external database"**.
 
-<img alt="Editor X external db connection with Wix and Firestore" src="/images/editorx-wix-external-db-connection-panel.jpeg" />
+<Img alt="Editor X external db connection with Wix and Firestore" src="/images/editorx-wix-external-db-connection-panel.jpeg" />
 
 **Select Google Cloud and add the details:**
 
@@ -272,17 +273,17 @@ Now we can go to our Wix Editor to connect our external DB to our Wix website/we
 
 And click connect.
 
-<img alt="External DB connection details popup in Editor X" src="/images/external-db-service-connection-details.jpeg" />
+<Img alt="External DB connection details popup in Editor X" src="/images/external-db-service-connection-details.jpeg" />
 
 If there is no problem you will see a success popup.
 
-<img alt="Success popup after connecting external DB to Wix" src="/images/success-popup-after-external-db-connected.jpeg" />
+<Img alt="Success popup after connecting external DB to Wix" src="/images/success-popup-after-external-db-connected.jpeg" />
 
 And after that you can see your collection and it's fields.
 
-<img alt="Connected external DB to Editor X" src="/images/connected-external-db-fields-in-editorx-wix.jpeg" />
+<Img alt="Connected external DB to Editor X" src="/images/connected-external-db-fields-in-editorx-wix.jpeg" />
 
-<img alt="CMS view of connected DB" src="/images/cms-view-of-connected-external-db-in-wix.jpeg" />
+<Img alt="CMS view of connected DB" src="/images/cms-view-of-connected-external-db-in-wix.jpeg" />
 
 ## **Testing Cloud Run URL**
 

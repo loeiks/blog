@@ -30,7 +30,7 @@
 
   const handleMouseEnter = (event: Event) => {
     const target = event.target as HTMLElement;
-    const mode = target?.dataset.soundMode as SoundMode | undefined;
+    const mode = target?.dataset?.soundMode as SoundMode | undefined;
 
     if (mode && mode in sounds) {
       playSound(mode);

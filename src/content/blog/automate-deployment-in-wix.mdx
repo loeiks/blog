@@ -6,6 +6,7 @@ customSlug: "automate-your-deployment-for-wix-sites"
 ---
 
 import PostOrigin from "~/components/PostOrigin.astro"
+import Img from "~/components/html/Img.astro"
 
 There are tons of sites using custom code in Wix, some of them uses Git integration and some not. In this article I will try to explain how you can build an automated deployment for your Wix site with Git integration via GitHub.
 
@@ -32,7 +33,7 @@ Create a new API key and find the **“Wix CLI - Git Integration”** permission
 
 After you created API key you should see it like this;
 
-<img src="/images/wix-api-permissions.png"/>
+<Img src="/images/wix-api-permissions.png"/>
 
 ## Let’s Build publish.yml
 
@@ -205,7 +206,7 @@ Now we are ready for last step.
 
 Now open up GitHub and the repository of your project then go to settings tab;
 
-<img src="/images/github-settings-secrets.png"/>
+<Img src="/images/github-settings-secrets.png" alt="GitHub settings secrets" />
 
 1. In settings find **Secrets and Variables** click it.
 2. In the **Actions** tab create a new repository secret.
