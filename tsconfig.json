@@ -8,6 +8,12 @@
     "dist"
   ],
   "compilerOptions": {
+    "strict": true,
+    "plugins": [
+      {
+        "name": "@astrojs/ts-plugin"
+      }
+    ],
     "paths": {
       "~/*": [
         "./src/*"

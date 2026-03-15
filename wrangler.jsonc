@@ -1,29 +1,29 @@
 {
-  "$schema": "./node_modules/wrangler/config-schema.json",
-  "main": "dist/_worker.js/index.js",
-  "name": "blog",
-  "compatibility_date": "2026-02-20",
-  "compatibility_flags": [
-    "nodejs_compat",
-    "global_fetch_strictly_public"
-  ],
-  "assets": {
-    "binding": "ASSETS",
-    "directory": "./dist"
-  },
-  "observability": {
-    "enabled": true
-  },
-  "routes": [
-    {
-      "custom_domain": true,
-      "pattern": "enesb.im"
-    },
-    {
-      "custom_domain": true,
-      "pattern": "www.enesb.im"
-    }
-  ],
-  "preview_urls": false,
-  "workers_dev": false,
+	"$schema": "./node_modules/wrangler/config-schema.json",
+	"main": "@astrojs/cloudflare/entrypoints/server",
+	"name": "blog",
+	"compatibility_date": "2026-02-20",
+	"compatibility_flags": [
+		"nodejs_compat",
+		"global_fetch_strictly_public"
+	],
+	"assets": {
+		"binding": "ASSETS",
+		"directory": "./dist"
+	},
+	"observability": {
+		"enabled": true
+	},
+	"routes": [
+		{
+			"custom_domain": true,
+			"pattern": "enesb.im"
+		},
+		{
+			"custom_domain": true,
+			"pattern": "www.enesb.im"
+		}
+	],
+	"preview_urls": false,
+	"workers_dev": false,
 }

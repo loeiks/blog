@@ -1,42 +1,41 @@
 ---
-import type { GetStaticPaths } from "astro";
-import { getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
 import BaseLayout from "~/layouts/BaseLayout.astro";
 import Link from "~/components/html/Link.astro";
 import Img from "~/components/html/Img.astro";
 
-export const getStaticPaths = (async () => {
-  const blogEntries = await getCollection("blog");
+export const getStaticPaths = async () => {
+  const posts = await getCollection("blog");
 
-  return blogEntries.map((entry) => ({
-    params: { slug: entry.data.customSlug },
-    props: { entry },
+  return posts.map((post) => ({
+    params: { slug: post.data.customSlug },
+    props: { post },
   }));
-}) satisfies GetStaticPaths;
+};
 
-const { entry } = Astro.props;
-const { Content } = await entry.render();
+const { post } = Astro.props;
+const { Content } = await render(post);
 ---
 
 <BaseLayout
-  title={`${entry.data.title} | @loeiks`}
-  description={entry.data.description}
+  title={`${post.data.title} | @loeiks`}
+  description={post.data.description}
 >
   <article class="flex flex-col gap-4">
     <div class="flex flex-col">
       <time
-        datetime={entry.data.publishDate.toISOString()}
+        datetime={post.data.publishDate.toISOString()}
         class="text-gray-600 mb-1"
       >
         {
-          entry.data.publishDate.toLocaleDateString("en-US", {
+          post.data.publishDate.toLocaleDateString("en-US", {
             year: "numeric",
             month: "long",
             day: "numeric",
           })
         }
       </time>
-      <h1 class="text-4xl font-bold">{entry.data.title}</h1>
+      <h1 class="text-4xl font-bold">{post.data.title}</h1>
     </div>
 
     <div

@@ -47,3 +47,7 @@
   border-radius: 6px;
   corner-shape: squircle;
 }
+
+@view-transition {
+  navigation: auto;
+}

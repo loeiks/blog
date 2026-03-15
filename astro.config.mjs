@@ -5,7 +5,7 @@ import tailwindcss from "@tailwindcss/vite";
 import mdx from "@astrojs/mdx";
 import cloudflare from "@astrojs/cloudflare";
 
-import sitemap, { ChangeFreqEnum } from "@astrojs/sitemap";
+import sitemap from "@astrojs/sitemap";
 
 // https://astro.build/config
 export default defineConfig({
